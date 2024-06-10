@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 public class CsvQuestionDao implements QuestionDao {
@@ -40,10 +41,12 @@ public class CsvQuestionDao implements QuestionDao {
     }
 
     private InputStream getInputStream(String fileName) {
+        Objects.requireNonNull(fileName);
         return getClass().getClassLoader().getResourceAsStream(fileName);
     }
 
     private List<Question> convertToDomain(List<QuestionDto> data) {
+        Objects.requireNonNull(data);
         return data.stream().map(QuestionDto::toDomainObject).toList();
     }
 }
