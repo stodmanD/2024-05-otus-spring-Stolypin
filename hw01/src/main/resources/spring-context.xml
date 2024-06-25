@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+    <bean id="ioService" class="com.example.hw01.service.impl.StreamsIOService">
+        <constructor-arg index="0">
+            <util:constant static-field="java.lang.System.out"/>
+        </constructor-arg>
+    </bean>
+    <bean id="fileNameProvider" class="com.example.hw01.config.AppProperties">
+        <constructor-arg value="questions.csv"/>
+    </bean>
+    <bean id="questionDao" class="com.example.hw01.dao.CsvQuestionDao">
+        <constructor-arg name="fileNameProvider" ref="fileNameProvider"/>
+    </bean>
+    <bean id="testServiceImpl"
+          class="com.example.hw01.service.impl.TestServiceImpl">
+        <constructor-arg index="0" name="ioService" ref="ioService"/>
+        <constructor-arg index="1" name="questionDao" ref="questionDao"/>
+    </bean>
+    <bean id="testRunnerService" class="com.example.hw01.service.impl.TestRunnerServiceImpl">
+        <constructor-arg index="0" ref="testServiceImpl" />
+    </bean>
+
+</beans>
