@@ -4,9 +4,9 @@ import com.example.hw02annotationconfig.service.IOService;
 import com.example.hw02annotationconfig.service.StudentService;
 import com.example.hw02annotationconfig.service.StudentServiceImpl;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Repository;
+import org.springframework.context.annotation.Configuration;
 
-@Repository
+@Configuration
 public class StudentConfig {
     @Bean
     public StudentService getStudentService(IOService ioService) {
