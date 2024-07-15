@@ -1,0 +1,25 @@
+test:
+  rightAnswersCountToPass: 3
+  fileNameByLocaleTag:
+    ru-RU: questions_ru.csv
+    en-US: questions.csv
+  locale: ru-RU
+spring:
+  application:
+    name: Tests
+    version: 0.0.1
+  output:
+    ansi:
+      enabled: always
+  messages:
+    basename: messages/messages
+
+#  config:
+#    activate:
+#      on-profile: test
+
+  banner:
+    location: classpath:banner.txt
+#  profiles:
+#    default: test
+#locale: en-US
