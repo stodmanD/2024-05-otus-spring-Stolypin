@@ -1,15 +1,16 @@
 package com.example.hw03springboot.config;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Locale;
 import java.util.Map;
 
-// Использовать @ConfigurationProperties.
-// Сейчас класс соответствует файлу настроек. Чтобы они сюда отобразились нужно только правильно разместить аннотации
-
-@Data
+@Setter
+@Getter
+@RequiredArgsConstructor
 @ConfigurationProperties(prefix = "test")
 public class AppProperties implements TestConfig, TestFileNameProvider, LocaleConfig {
 
@@ -29,9 +30,13 @@ public class AppProperties implements TestConfig, TestFileNameProvider, LocaleCo
         return fileNameByLocaleTag.get(locale.toLanguageTag());
     }
 
+    public void setLocale(String locale) {
+        this.locale = Locale.forLanguageTag(locale);
+    }
 
     @Override
     public Locale getLocale() {
         return locale;
     }
+
 }

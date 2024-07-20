@@ -6,7 +6,7 @@ import com.example.hw03springboot.domain.Answer;
 import com.example.hw03springboot.domain.Question;
 import com.example.hw03springboot.domain.Student;
 import com.example.hw03springboot.service.LocalizedIOService;
-import com.example.hw03springboot.service.TestServiceImpl;
+import com.example.hw03springboot.service.impl.TestServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;

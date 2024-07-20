@@ -6,52 +6,46 @@ import com.example.hw03springboot.domain.Question;
 import com.example.hw03springboot.exceptions.QuestionReadException;
 import com.opencsv.bean.CsvToBeanBuilder;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-@Repository
+@Component
 public class CsvQuestionDao implements QuestionDao {
-    private final TestFileNameProvider fileNameProvider;
+
+    private final TestFileNameProvider testFileNameProvider;
 
     @Override
     public List<Question> findAll() {
-        // Использовать CsvToBean
-        // https://opencsv.sourceforge.net/#collection_based_bean_fields_one_to_many_mappings
-        // Использовать QuestionReadException
-        // Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
-        // Использовать CsvToBean
-        // https://opencsv.sourceforge.net/#collection_based_bean_fields_one_to_many_mappings
-        // Использовать QuestionReadException
-        // Про ресурсы: https://mkyong.com/java/java-read-a-file-from-resources-folder/
-        final var fileName = fileNameProvider.getTestFileName();
-        try (final var iStream = getInputStream(fileName)) {
-            final var data = readData(iStream);
-            return convertToDomain(data);
-        } catch (Exception ex) {
-            throw new QuestionReadException("Error while reading questions from CSV file", ex);
+        var dsd = testFileNameProvider.getTestFileName();
+
+        try (var inputStream = getClass().getClassLoader()
+                .getResourceAsStream(testFileNameProvider.getTestFileName())) {
+            if (inputStream != null) {
+                return processCsvFile(inputStream);
+            }
+            throw new QuestionReadException("error.read.file");
+        } catch (Exception exception) {
+            throw new QuestionReadException(exception.getMessage(), exception);
         }
     }
 
-    private List<QuestionDto> readData(InputStream iStream) {
-        return new CsvToBeanBuilder<QuestionDto>(new InputStreamReader(iStream))
+    private List<Question> processCsvFile(InputStream inputStream) {
+        var reader = new InputStreamReader(inputStream);
+        var csvReader = new CsvToBeanBuilder<QuestionDto>(reader)
                 .withType(QuestionDto.class)
-                .withSkipLines(1)
                 .withSeparator(';')
-                .build().parse();
+                .withIgnoreLeadingWhiteSpace(true)
+                .withIgnoreEmptyLine(true)
+                .withSkipLines(1)
+                .build();
+        return csvReader.parse().stream()
+                .map(QuestionDto::toDomainObject)
+                .collect(Collectors.toList());
     }
 
-    private InputStream getInputStream(String fileName) {
-        Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream(fileName));
-        return getClass().getClassLoader().getResourceAsStream(fileName);
-    }
-
-    private List<Question> convertToDomain(List<QuestionDto> data) {
-        Objects.requireNonNull(data);
-        return data.stream().map(QuestionDto::toDomainObject).toList();
-    }
 }

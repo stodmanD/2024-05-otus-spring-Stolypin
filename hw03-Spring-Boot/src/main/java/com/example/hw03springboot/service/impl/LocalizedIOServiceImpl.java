@@ -1,5 +1,8 @@
-package com.example.hw03springboot.service;
+package com.example.hw03springboot.service.impl;
 
+import com.example.hw03springboot.service.IOService;
+import com.example.hw03springboot.service.LocalizedIOService;
+import com.example.hw03springboot.service.LocalizedMessagesService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -66,7 +69,7 @@ public class LocalizedIOServiceImpl implements LocalizedIOService {
         return ioService.readIntForRangeWithPrompt(min, max,
                 localizedMessagesService.getMessage(promptCode),
                 localizedMessagesService.getMessage(errorMessageCode)
-                );
+        );
     }
 
     @Override
@@ -74,8 +77,4 @@ public class LocalizedIOServiceImpl implements LocalizedIOService {
         return localizedMessagesService.getMessage(code, args);
     }
 
-    @Override
-    public String get(String key) {
-        return getMessage(key, new Object[]{});
-    }
 }

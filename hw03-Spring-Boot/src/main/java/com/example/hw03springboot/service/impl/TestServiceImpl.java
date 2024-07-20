@@ -1,19 +1,17 @@
-package com.example.hw03springboot.service;
+package com.example.hw03springboot.service.impl;
 
 import com.example.hw03springboot.config.AppProperties;
 import com.example.hw03springboot.dao.QuestionDao;
 import com.example.hw03springboot.domain.Answer;
 import com.example.hw03springboot.domain.Student;
 import com.example.hw03springboot.domain.TestResult;
+import com.example.hw03springboot.service.LocalizedIOService;
+import com.example.hw03springboot.service.TestService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Locale;
-
-@Service
 @RequiredArgsConstructor
+@Service
 public class TestServiceImpl implements TestService {
 
     private final LocalizedIOService ioService;
@@ -42,28 +40,5 @@ public class TestServiceImpl implements TestService {
         }
         return testResult;
     }
-
-    @Override
-    public void chooseLanguage() {
-        var fileNameByLocaleTagMap = new HashMap<String, String>();
-        ioService.printFormattedLine("Please choose your language: EN or RU");
-        while (true) {
-            var language = ioService.readString();
-            if (language.equals("EN")) {
-                fileNameByLocaleTagMap.put(Locale.ENGLISH.toLanguageTag(), "questions.csv");
-                appProperties.setLocale(Locale.ENGLISH);
-                appProperties.setFileNameByLocaleTag(fileNameByLocaleTagMap);
-                break;
-            } else if (language.equals("RU")) {
-                fileNameByLocaleTagMap.put(LocaleContextHolder.getLocale().toLanguageTag(), "questions_ru.csv");
-                appProperties.setLocale(LocaleContextHolder.getLocale());
-                appProperties.setFileNameByLocaleTag(fileNameByLocaleTagMap);
-                break;
-            } else {
-                ioService.printLine("Incorrect language. Please type EN or RU");
-            }
-        }
-    }
-
 
 }
