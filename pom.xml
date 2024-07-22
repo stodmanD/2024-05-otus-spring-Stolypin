@@ -18,6 +18,7 @@
 		<module>hw01</module>
 		<module>hw02-annotation-config</module>
 		<module>hw03-Spring-Boot</module>
+		<module>hw06-jpa</module>
 	</modules>
 	<properties>
 		<java.version>17</java.version>
@@ -38,7 +39,13 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.springframework.shell</groupId>
+            <artifactId>spring-shell-standard</artifactId>
+            <version>3.2.4</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>
@@ -52,6 +59,14 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>8</source>
+					<target>8</target>
 				</configuration>
 			</plugin>
 		</plugins>
