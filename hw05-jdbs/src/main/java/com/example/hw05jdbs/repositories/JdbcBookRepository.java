@@ -55,7 +55,7 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public Book save(Book book) {
-        if (0 == book.getId()) {
+        if (0 == book.id()) {
             return insert(book);
         }
         return update(book);
