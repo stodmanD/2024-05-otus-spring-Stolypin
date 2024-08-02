@@ -5,6 +5,8 @@ import com.example.hw05jdbs.models.Author;
 import com.example.hw05jdbs.models.Book;
 import com.example.hw05jdbs.models.Genre;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,17 +34,26 @@ public class JdbcBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        final var book = jdbc.query("""
-            select b.title book_title, b.id book_id, a.full_name author_name, a.id author_id
-            from books b join authors a on b.author_id = a.id
-            where b.id = :id
-                """,
-                Map.of("id", id),
-                mapper
-        ).stream().findAny();
 
-        book.ifPresent(this::enrichWithGenres);
-        return book;
+        return Optional.ofNullable(jdbc.query("""
+                        SELECT
+                          books.id AS book_id,
+                          books.title AS book_title,
+                          authors.id AS author_id,
+                          authors.full_name AS author_full_name,
+                          genres.id AS genre_id,
+                          genres.name AS genre_name
+                        FROM
+                          BOOKS
+                          INNER JOIN authors ON books.author_id = authors.id
+                          INNER JOIN books_genres bg ON books.id = bg.book_id
+                          INNER JOIN genres ON bg.genre_id = genres.id
+                        WHERE
+                          books.id = :id
+                            """,
+                Map.of("id", id),
+                new BookResultSetExtractor()
+        ));
     }
 
     @Override
@@ -158,13 +170,6 @@ public class JdbcBookRepository implements BookRepository {
         );
     }
 
-    private void enrichWithGenres(Book book) {
-        final var relations = getGenreRelationsForBookId(book.id());
-        final var genreIds = relations.stream()
-                .map(BookGenreRelation::genreId).collect(Collectors.toSet());
-        book.genres(genreRepository.findAllByIds(genreIds));
-    }
-
     private List<BookGenreRelation> getGenreRelationsForBookId(Long bookId) {
         return jdbc.query(
                 "select book_id, genre_id from books_genres where book_id = :book_id",
@@ -189,5 +194,34 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private record BookGenreRelation(long bookId, long genreId) {
+    }
+
+    // Использовать для findById
+    @SuppressWarnings("ClassCanBeRecord")
+    @RequiredArgsConstructor
+    private static class BookResultSetExtractor implements ResultSetExtractor<Book> {
+
+        @Override
+        public Book extractData(ResultSet rs) throws SQLException, DataAccessException {
+            Book result = null;
+            while (rs.next()) {
+                long bookId = rs.getLong("book_id");
+                String bookTitle = rs.getString("book_title");
+                long authorId = rs.getLong("author_id");
+                String authorFullName = rs.getString("author_full_name");
+                long genreId = rs.getLong("genre_id");
+                String genreName = rs.getString("genre_name");
+                if (result == null) {
+                    result = new Book(
+                            bookId,
+                            bookTitle,
+                            new Author(authorId, authorFullName),
+                            new LinkedList<>()
+                    );
+                }
+                result.genres().add(new Genre(genreId, genreName));
+            }
+            return result;
+        }
     }
 }
