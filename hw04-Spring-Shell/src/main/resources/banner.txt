@@ -1,0 +1,10 @@
+${AnsiColor.BLUE}
+
+                     　∧　 　∧　 　
+                     ( ´0ω 0` ）
+                     \ ${AnsiColor.RED}ゝーく${AnsiColor.BLUE}　/
+                        ___
+${Ansi.YELLOW}
+${spring.application.name} ${spring.application.version}
+Powered by Spring Boot ${spring-boot.version}
+${Ansi.NORMAL}
