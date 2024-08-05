@@ -4,46 +4,49 @@ import com.example.hw06jpa.models.Comment;
 import com.example.hw06jpa.repositories.CommentRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Repository
 @RequiredArgsConstructor
+@Repository
 public class JpaCommentRepository implements CommentRepository {
 
     @PersistenceContext
     private final EntityManager entityManager;
 
     @Override
+    public List<Comment> findByBookId(long bookId) {
+        TypedQuery<Comment> query = entityManager.createQuery(
+                "select c from Comment c where c.book.id = :bookId",
+                Comment.class);
+        query.setParameter("bookId", bookId);
+        return query.getResultList();
+    }
+
+    @Override
     public Optional<Comment> findById(long id) {
-        return Optional.ofNullable(entityManager.find(Comment.class, id));
+        Comment comment = entityManager.find(Comment.class, id);
+        return Optional.ofNullable(comment);
     }
 
     @Override
-    public List<Comment> findAllCommentByBookId(long bookId) {
-        return entityManager.createQuery("SELECT c FROM Comment c WHERE c.book.id = :id"
-                , Comment.class).setParameter("id", bookId).getResultList();
-    }
-
-    @Override
-    public void delete(long id) {
-        var comment = findById(id);
-        comment.ifPresent(entityManager::remove);
-    }
-
-    @Override
-    public Comment saveOrUpdate(Comment comment) {
+    public Comment save(Comment comment) {
         if (comment.getId() == 0) {
-            entityManager.persist(comment);
-            return comment;
+            return create(comment);
         }
         return update(comment);
     }
 
     private Comment update(Comment comment) {
         return entityManager.merge(comment);
+    }
+
+    private Comment create(Comment comment) {
+        entityManager.persist(comment);
+        return comment;
     }
 }

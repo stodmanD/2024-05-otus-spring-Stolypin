@@ -5,8 +5,6 @@ import com.example.hw06jpa.services.AuthorService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
-
 
 import java.util.stream.Collectors;
 
@@ -24,12 +22,4 @@ public class AuthorCommands {
                 .map(authorConverter::authorToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
-
-    @ShellMethod(value = "Find author by id", key = "abid")
-    public String findAuthorById(@ShellOption("id") long id) {
-        return authorService.findById(id)
-                .map(authorConverter::authorToString)
-                .orElse("Author with id %d not found".formatted(id));
-    }
-
 }

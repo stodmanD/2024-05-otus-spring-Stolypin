@@ -5,8 +5,8 @@ import com.example.hw06jpa.services.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"SpellCheckingInspection", "unused"})
@@ -26,32 +26,29 @@ public class BookCommands {
     }
 
     @ShellMethod(value = "Find book by id", key = "bbid")
-    public String findBookById(@ShellOption("id") long id) {
+    public String findBookById(long id) {
         return bookService.findById(id)
                 .map(bookConverter::bookToString)
-                .orElse("The Book with id %d not found".formatted(id));
+                .orElse("Book with id %d not found".formatted(id));
     }
 
-    // bins newBook 1 1
+    // bins newBook 1 1,3
     @ShellMethod(value = "Insert book", key = "bins")
-    public String insertBook(@ShellOption("title") String title, @ShellOption("authorId") long authorId,
-                             @ShellOption("genreId") long genreId) {
-        var savedBook = bookService.create(title, authorId, genreId);
+    public String insertBook(String title, long authorId, Set<Long> genreIds) {
+        var savedBook = bookService.create(title, authorId, genreIds);
         return bookConverter.bookToString(savedBook);
     }
 
-    // bupd 4 editedBook 3 2
+    // bupd 4 editedBook 3 2,4
     @ShellMethod(value = "Update book", key = "bupd")
-    public String updateBook(@ShellOption("id") long id, @ShellOption("title") String title,
-                             @ShellOption("authorId") long authorId, @ShellOption("genreId") long genreId) {
-        var savedBook = bookService.update(id, title, authorId, genreId);
+    public String updateBook(long id, String title, long authorId, Set<Long> genreIds) {
+        var savedBook = bookService.update(id, title, authorId, genreIds);
         return bookConverter.bookToString(savedBook);
     }
 
     // bdel 4
     @ShellMethod(value = "Delete book by id", key = "bdel")
-    public void deleteBook(@ShellOption("id") long id) {
+    public void deleteBook(long id) {
         bookService.deleteById(id);
     }
-
 }

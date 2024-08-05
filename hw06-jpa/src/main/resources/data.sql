@@ -1,7 +1,8 @@
-MERGE INTO authors KEY (id, full_name) VALUES (1, 'Nikolay Gogol'), (2, 'Fedor Dostoevsky');
+insert into authors(full_name) values ('Author_1'), ('Author_2'), ('Author_3');
 
-MERGE INTO genres KEY (id, name) VALUES (1, 'Novel');
+insert into genres(name) values ('Genre_1'), ('Genre_2'), ('Genre_3'), ('Genre_4'), ('Genre_5'), ('Genre_6');
 
-MERGE INTO books KEY (id, title, genre_id, author_id) VALUES (1, 'Dead souls', 1, 1), (2, 'Crime and punishment', 2, 1);
+insert into books(title, author_id)
+values ('BookTitle_1', 1), ('BookTitle_2', 2), ('BookTitle_3', 3);
 
-MERGE INTO comments KEY (id, text, book_id) VALUES (1, 'This book is cool', 1), (2, 'Wow! This awesome!', 1)
+insert into books_genres(book_id, genre_id) values (1, 1),   (1, 2), (2, 3), (2, 4), (3, 5), (3, 6);

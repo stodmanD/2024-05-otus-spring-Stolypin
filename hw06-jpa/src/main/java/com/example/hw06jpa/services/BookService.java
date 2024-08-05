@@ -1,20 +1,20 @@
 package com.example.hw06jpa.services;
 
-import com.example.hw06jpa.models.Book;
+
+import com.example.hw06jpa.dto.BookDto;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface BookService {
+    Optional<BookDto> findById(long id);
 
-    Optional<Book> findById(long id);
+    List<BookDto> findAll();
 
-    List<Book> findAll();
+    BookDto create(String title, long authorId, Set<Long> genreIds);
 
-    Book create(String title, long authorId, long genreId);
-
-    Book update(long id, String title, long authorId, long genreId);
+    BookDto update(long id, String title, long authorId, Set<Long> genreIds);
 
     void deleteById(long id);
-
 }

@@ -2,56 +2,51 @@ package com.example.hw06jpa;
 
 import com.example.hw06jpa.models.Genre;
 import com.example.hw06jpa.repositories.impl.JpaGenreRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.util.List;
+import java.util.Set;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@DisplayName("Репозиторий на основе Jpa для работы с жанрами ")
 @DataJpaTest
-@DisplayName("Author repository test")
 @Import({JpaGenreRepository.class})
 class JpaGenreRepositoryTest {
 
     @Autowired
-    private TestEntityManager entityManager;
+    private TestEntityManager em;
 
     @Autowired
-    private JpaGenreRepository genreRepository;
+    private JpaGenreRepository jpaGenreRepository;
 
-    private List<Genre> dbGenres;
-
-    @BeforeEach
-    void setUp() {
-        dbGenres = getDbGenres();
-    }
-
+    @DisplayName("должен загружать жанры по списку id")
     @Test
-    @DisplayName("Get all genres")
-    void findAll() {
-        var actualGenres = genreRepository.findAll();
-        var expectedGenre = dbGenres;
-        assertThat(actualGenres).containsExactlyElementsOf(expectedGenre);
+    void shouldReturnCorrectGenresByIds() {
+        Genre genre1 = em.find(Genre.class, 1L);
+        Genre genre2 = em.find(Genre.class, 2L);
+        Genre genre3 = em.find(Genre.class, 3L);
+        List<Genre> expectedGenres = List.of(genre1, genre2, genre3);
+
+        List<Genre> actualGenres = jpaGenreRepository.findAllByIds(Set.of(1L, 2L, 3L));
+
+        assertThat(actualGenres)
+                .usingRecursiveComparison()
+                .isEqualTo(expectedGenres);
     }
 
-    @DisplayName("Get genre by id")
-    @ParameterizedTest
-    @MethodSource("getDbGenres")
-    void shouldGenreById(Genre expectedGenre) {
-        var actualAuthor = genreRepository.findById(expectedGenre.getId());
-        assertThat(actualAuthor).isPresent().get().isEqualTo(expectedGenre);
-    }
+    @DisplayName("должен загружать список всех жанров")
+    @Test
+    void shouldReturnCorrectGenresList() {
+        List<Genre> genres = jpaGenreRepository.findAll();
 
-    private static List<Genre> getDbGenres() {
-        return List.of(new Genre(1, "Novel"));
+        assertEquals(6, genres.size());
+        genres.forEach(System.out::println);
     }
-
 }

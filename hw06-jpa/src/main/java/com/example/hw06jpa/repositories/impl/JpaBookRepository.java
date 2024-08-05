@@ -5,18 +5,15 @@ import com.example.hw06jpa.repositories.BookRepository;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
-
-@Repository
 @RequiredArgsConstructor
+@Repository
 public class JpaBookRepository implements BookRepository {
 
     @PersistenceContext
@@ -24,37 +21,41 @@ public class JpaBookRepository implements BookRepository {
 
     @Override
     public Optional<Book> findById(long id) {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("author-genre-entity-graph");
-        Map<String, Object> properties = new HashMap<>();
-        properties.put("jakarta.persistence.fetchgraph", entityGraph);
-        return Optional.ofNullable(entityManager.find(Book.class, id, properties));
+        Book book = entityManager.find(Book.class, id);
+        return Optional.ofNullable(book);
     }
 
     @Override
     public List<Book> findAll() {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("author-genre-entity-graph");
-        var query = entityManager.createQuery("select b FROM Book b", Book.class);
-        query.setHint(FETCH.getKey(), entityGraph);
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("authors-entity-graph");
+        TypedQuery<Book> query = entityManager.createQuery("select b from Book b", Book.class);
+        query.setHint("javax.persistence.fetchgraph", entityGraph);
         return query.getResultList();
     }
 
     @Override
     public Book save(Book book) {
         if (book.getId() == 0) {
-            entityManager.persist(book);
-            return book;
+            return create(book);
         }
         return update(book);
     }
 
     @Override
     public void deleteById(long id) {
-        var book = findById(id);
-        book.ifPresent(entityManager::remove);
+        Book book = entityManager.find(Book.class, id);
+        if (book == null) {
+            return;
+        }
+        entityManager.remove(book);
+    }
+
+    private Book create(Book book) {
+        entityManager.persist(book);
+        return book;
     }
 
     private Book update(Book book) {
         return entityManager.merge(book);
     }
-
 }
