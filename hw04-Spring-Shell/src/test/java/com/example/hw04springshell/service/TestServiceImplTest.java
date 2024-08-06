@@ -1,20 +1,16 @@
-package com.example.hw04springshell;
+package com.example.hw04springshell.service;
 
 import com.example.hw04springshell.dao.QuestionDao;
 import com.example.hw04springshell.domain.Answer;
 import com.example.hw04springshell.domain.Question;
 import com.example.hw04springshell.domain.Student;
 import com.example.hw04springshell.exceptions.QuestionReadException;
-import com.example.hw04springshell.service.LocalizedIOService;
-import com.example.hw04springshell.service.TestServiceImpl;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +24,6 @@ import static org.mockito.Mockito.*;
 
 @DisplayName("Testing service class")
 @SpringBootTest(properties = "spring.shell.interactive.enabled=false")
-@ExtendWith(SpringExtension.class)
 class TestServiceImplTest {
     private static final String STUDENT_FIRST_NAME = "Bob";
     private static final String STUDENT_LAST_NAME = "Donovan";
@@ -47,7 +42,7 @@ class TestServiceImplTest {
 
     @Test
     @DisplayName("Check TestServiceImpl. Empty list from DAO")
-    void test() {
+    void testCheckEmptyList() {
         List<Question> daoResult = Collections.emptyList();
         when(questionDao.findAll()).thenReturn(daoResult);
         Student student = new Student(STUDENT_FIRST_NAME, STUDENT_LAST_NAME);
@@ -62,7 +57,7 @@ class TestServiceImplTest {
 
     @Test
     @DisplayName("Check TestServiceImpl. One record from DAO")
-    void test1() {
+    void testCheckOneRecord() {
         List<Answer> answers =
                 List.of(new Answer("Answer one", false), new Answer("Answer two", true));
         Question question = new Question("Question one", answers);
@@ -86,7 +81,7 @@ class TestServiceImplTest {
 
     @Test
     @DisplayName("Check TestServiceImpl. Exception from DAO")
-    void test2() {
+    void testCheckException() {
         doThrow(QuestionReadException.class).when(questionDao).findAll();
         Student student = new Student(STUDENT_FIRST_NAME, STUDENT_LAST_NAME);
 

@@ -1,14 +1,11 @@
-package com.example.hw04springshell;
+package com.example.hw04springshell.dao;
 
 import com.example.hw04springshell.config.AppProperties;
-import com.example.hw04springshell.dao.CsvQuestionDao;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +13,6 @@ import static org.mockito.Mockito.when;
 
 @DisplayName("Test dao class")
 @SpringBootTest(properties = "spring.shell.interactive.enabled=false")
-@ExtendWith(SpringExtension.class)
 class CsvQuestionDaoTest {
     private static final String CSV_QUESTIONS_FILE_NAME_EN = "questions.csv";
     private static final String CSV_QUESTIONS_FILE_NAME_RU = "questions_ru.csv";
