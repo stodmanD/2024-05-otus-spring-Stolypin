@@ -1,4 +1,4 @@
-package com.example.hw06jpa;
+package com.example.hw06jpa.repositories;
 
 import com.example.hw06jpa.models.Book;
 import com.example.hw06jpa.models.Comment;
@@ -26,7 +26,7 @@ class JpaCommentRepositoryTest {
     @Autowired
     private JpaCommentRepository jpaCommentRepository;
 
-    @DisplayName("должен загружать комментарий по id")
+    @DisplayName("Should return correct comment by id")
     @Test
     void shouldReturnCorrectCommentById() {
         Book book = em.find(Book.class, 1L);
@@ -40,7 +40,7 @@ class JpaCommentRepositoryTest {
                 .isEqualTo(expectedComment);
     }
 
-    @DisplayName("должен загружать список комментариев для книги")
+    @DisplayName("Should return correct comment`s list for book")
     @Test
     void shouldReturnCorrectCommentsListForBook() {
         Book book = em.find(Book.class, 1L);
@@ -51,7 +51,7 @@ class JpaCommentRepositoryTest {
         assertThat(actualComments).usingRecursiveComparison().isEqualTo(expectedComments);
     }
 
-    @DisplayName("должен изменять текст комментария")
+    @DisplayName("Should update comment by id")
     @Test
     void shouldUpdateCommentById() {
         Comment comment = em.find(Comment.class, 1L);

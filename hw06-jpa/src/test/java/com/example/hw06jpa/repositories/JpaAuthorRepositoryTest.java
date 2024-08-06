@@ -1,4 +1,4 @@
-package com.example.hw06jpa;
+package com.example.hw06jpa.repositories;
 
 import com.example.hw06jpa.models.Author;
 import com.example.hw06jpa.models.Book;
@@ -26,7 +26,7 @@ class JpaAuthorRepositoryTest {
     @Autowired
     private JpaAuthorRepository jpaAuthorRepository;
 
-    @DisplayName("должен загружать автора по id")
+    @DisplayName("Should return correct author by id")
     @Test
     void shouldReturnCorrectAuthorById() {
         Book book = em.find(Book.class, 1L);
@@ -40,7 +40,7 @@ class JpaAuthorRepositoryTest {
                 .isEqualTo(expectedAuthor);
     }
 
-    @DisplayName("должен загружать список всех авторов")
+    @DisplayName("Should return correct authors list")
     @Test
     void shouldReturnCorrectAuthorsList() {
         List<Author> authors = jpaAuthorRepository.findAll();

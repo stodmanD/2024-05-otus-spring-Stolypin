@@ -1,4 +1,4 @@
-package com.example.hw06jpa;
+package com.example.hw06jpa.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

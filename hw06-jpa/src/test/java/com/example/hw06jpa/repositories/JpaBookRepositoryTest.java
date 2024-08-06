@@ -1,4 +1,4 @@
-package com.example.hw06jpa;
+package com.example.hw06jpa.repositories;
 
 import com.example.hw06jpa.models.Author;
 import com.example.hw06jpa.models.Book;
@@ -27,7 +27,7 @@ class JpaBookRepositoryTest {
     @Autowired
     private JpaBookRepository JpaBookrepository;
 
-    @DisplayName("должен загружать книгу по id")
+    @DisplayName("Should return correct book by id")
     @Test
     void shouldReturnCorrectBookById() {
         Book expectedBook = em.find(Book.class, 1);
@@ -37,7 +37,7 @@ class JpaBookRepositoryTest {
                 .isEqualTo(expectedBook);
     }
 
-    @DisplayName("должен загружать список всех книг")
+    @DisplayName("Should return correct all book`s list")
     @Test
     void shouldReturnCorrectBooksList() {
         var actualBooks = JpaBookrepository.findAll();
@@ -46,7 +46,7 @@ class JpaBookRepositoryTest {
         actualBooks.forEach(System.out::println);
     }
 
-    @DisplayName("должен сохранять новую книгу")
+    @DisplayName("Should save new book")
     @Test
     void shouldSaveNewBook() {
         Author author = em.find(Author.class, 2);
@@ -66,7 +66,7 @@ class JpaBookRepositoryTest {
                 .isEqualTo(returnedBook);
     }
 
-    @DisplayName("должен сохранять измененную книгу")
+    @DisplayName("Should save updated book")
     @Test
     void shouldSaveUpdatedBook() {
         Author author = em.find(Author.class, 2);
@@ -92,7 +92,7 @@ class JpaBookRepositoryTest {
                 .isEqualTo(returnedBook);
     }
 
-    @DisplayName("должен удалять книгу по id ")
+    @DisplayName("Should delete book")
     @Test
     void shouldDeleteBook() {
         assertThat(JpaBookrepository.findById(1L)).isPresent();

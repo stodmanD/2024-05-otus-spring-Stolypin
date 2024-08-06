@@ -1,4 +1,4 @@
-package com.example.hw06jpa;
+package com.example.hw06jpa.repositories;
 
 import com.example.hw06jpa.models.Genre;
 import com.example.hw06jpa.repositories.impl.JpaGenreRepository;
@@ -26,7 +26,7 @@ class JpaGenreRepositoryTest {
     @Autowired
     private JpaGenreRepository jpaGenreRepository;
 
-    @DisplayName("должен загружать жанры по списку id")
+    @DisplayName("Should return correct genres by id")
     @Test
     void shouldReturnCorrectGenresByIds() {
         Genre genre1 = em.find(Genre.class, 1L);
@@ -41,7 +41,7 @@ class JpaGenreRepositoryTest {
                 .isEqualTo(expectedGenres);
     }
 
-    @DisplayName("должен загружать список всех жанров")
+    @DisplayName("Should return correct genres list")
     @Test
     void shouldReturnCorrectGenresList() {
         List<Genre> genres = jpaGenreRepository.findAll();
