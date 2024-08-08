@@ -30,6 +30,17 @@ public class BookMapper {
         return result;
     }
 
+    public BookDto toDtoAll (Book book) {
+        BookDto result = new BookDto();
+        result.setId(book.getId());
+        result.setTitle(book.getTitle());
+        result.setAuthor(authorDtoConverter.toDto(book.getAuthor()));
+        result.setGenres(book.getGenres().stream()
+                .map(genreDtoConverter::toDto)
+                .toList());
+        return result;
+    }
+
     public Book toModel(BookDto dto) {
         Book result = new Book();
         result.setId(dto.getId());
