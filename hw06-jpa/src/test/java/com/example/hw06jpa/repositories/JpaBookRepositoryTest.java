@@ -25,13 +25,13 @@ class JpaBookRepositoryTest {
     private TestEntityManager em;
 
     @Autowired
-    private JpaBookRepository JpaBookrepository;
+    private JpaBookRepository jpaBookRepository;
 
     @DisplayName("Should return correct book by id")
     @Test
     void shouldReturnCorrectBookById() {
         Book expectedBook = em.find(Book.class, 1);
-        var actualBook = JpaBookrepository.findById(expectedBook.getId());
+        var actualBook = jpaBookRepository.findById(expectedBook.getId());
         assertThat(actualBook).isPresent()
                 .get()
                 .isEqualTo(expectedBook);
@@ -40,7 +40,7 @@ class JpaBookRepositoryTest {
     @DisplayName("Should return correct all book`s list")
     @Test
     void shouldReturnCorrectBooksList() {
-        var actualBooks = JpaBookrepository.findAll();
+        var actualBooks = jpaBookRepository.findAll();
 
         assertEquals(3, actualBooks.size());
         actualBooks.forEach(System.out::println);
@@ -55,12 +55,12 @@ class JpaBookRepositoryTest {
         var expectedBook =
                 new Book(0L, "Title4", author, List.of(genre4, genre5), Collections.emptyList());
 
-        var returnedBook = JpaBookrepository.save(expectedBook);
+        var returnedBook = jpaBookRepository.save(expectedBook);
         assertThat(returnedBook).isNotNull()
                 .matches(book -> book.getId() > 0)
                 .usingRecursiveComparison().ignoringFields("id").ignoringExpectedNullFields().isEqualTo(expectedBook);
 
-        assertThat(JpaBookrepository.findById(returnedBook.getId()))
+        assertThat(jpaBookRepository.findById(returnedBook.getId()))
                 .isPresent()
                 .get()
                 .isEqualTo(returnedBook);
@@ -75,18 +75,18 @@ class JpaBookRepositoryTest {
         var expectedBook =
                 new Book(1L, "BookTitle_10500", author, List.of(genre4, genre5), Collections.emptyList());
 
-        assertThat(JpaBookrepository.findById(expectedBook.getId()))
+        assertThat(jpaBookRepository.findById(expectedBook.getId()))
                 .isPresent()
                 .get()
                 .isNotEqualTo(expectedBook);
 
-        var returnedBook = JpaBookrepository.save(expectedBook);
+        var returnedBook = jpaBookRepository.save(expectedBook);
         assertThat(returnedBook).isNotNull()
                 .matches(book -> book.getId() > 0)
                 .usingRecursiveComparison()
                 .ignoringExpectedNullFields().isEqualTo(expectedBook);
 
-        assertThat(JpaBookrepository.findById(returnedBook.getId()))
+        assertThat(jpaBookRepository.findById(returnedBook.getId()))
                 .isPresent()
                 .get()
                 .isEqualTo(returnedBook);
@@ -95,8 +95,8 @@ class JpaBookRepositoryTest {
     @DisplayName("Should delete book")
     @Test
     void shouldDeleteBook() {
-        assertThat(JpaBookrepository.findById(1L)).isPresent();
-        JpaBookrepository.deleteById(1L);
-        assertThat(JpaBookrepository.findById(1L)).isEmpty();
+        assertThat(jpaBookRepository.findById(1L)).isPresent();
+        jpaBookRepository.deleteById(1L);
+        assertThat(jpaBookRepository.findById(1L)).isEmpty();
     }
 }

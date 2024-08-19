@@ -11,7 +11,7 @@ spring:
       data-locations: data.sql
 
   jpa:
-    generate-ddl: true
+    generate-ddl: false
     defer-datasource-initialization: true
     properties:
       hibernate:
