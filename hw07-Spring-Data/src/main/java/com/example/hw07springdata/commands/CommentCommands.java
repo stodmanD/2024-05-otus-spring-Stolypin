@@ -42,4 +42,11 @@ public class CommentCommands {
         CommentDto comment = commentService.update(id, commentText);
         return commentConverter.commentToString(comment);
     }
+
+    //dcbid 7
+    @ShellMethod(value = "Delete comment by id", key = "dcbid")
+    public String deleteCommentById(long id) {
+        commentService.deleteById(id);
+        return "Comment with %d deleted".formatted(id);
+    }
 }

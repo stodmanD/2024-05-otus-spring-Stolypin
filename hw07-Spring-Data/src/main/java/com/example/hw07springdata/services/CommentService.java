@@ -11,4 +11,6 @@ public interface CommentService {
     Optional<CommentDto> findById(long id);
 
     CommentDto update(long id, String text);
+
+    void deleteById(long id);
 }

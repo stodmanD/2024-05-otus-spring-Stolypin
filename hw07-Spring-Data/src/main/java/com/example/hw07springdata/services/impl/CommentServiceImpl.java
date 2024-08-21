@@ -53,4 +53,14 @@ public class CommentServiceImpl implements CommentService {
         comment.setText(text);
         return commentMapper.toDto(commentRepository.save(comment));
     }
+
+    @Transactional
+    @Override
+    public void deleteById(long id) {
+        if (commentRepository.existsById(id)) {
+            commentRepository.deleteById(id);
+        } else {
+            throw new EntityNotFoundException("Comment with id=%d not found".formatted(id));
+        }
+    }
 }

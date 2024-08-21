@@ -9,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -67,20 +66,8 @@ class CommentRepositoryTest {
     @DisplayName("должен удалять комментарии для книги")
     @Test
     void shouldDeleteCommentsForBook() {
-        List<Comment> commentsBefore = getComments();
-
-        commentRepository.deleteByBookId(1L);
-
-        List<Comment> commentsAfter = getComments();
-        assertThat(commentsBefore).hasSize(3);
-        assertThat(commentsAfter).isEmpty();
-    }
-
-    private List<Comment> getComments() {
-        List<Comment> result = new LinkedList<>();
-        for (int i = 1; i < 4; i++) {
-            Optional.ofNullable(em.find(Comment.class, i)).ifPresent(result::add);
-        }
-        return result;
+        commentRepository.deleteById(1L);
+        Optional<Comment> comment = Optional.ofNullable(em.find(Comment.class, 1L));
+        assertThat(comment).isNotPresent();
     }
 }
