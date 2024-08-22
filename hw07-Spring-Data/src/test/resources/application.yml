@@ -5,6 +5,8 @@ spring:
     init:
       mode: always
       data-locations: data.sql
+      schema-locations: schema.sql
+      continue-on-error: true
   jpa:
     generate-ddl: true
     defer-datasource-initialization: true

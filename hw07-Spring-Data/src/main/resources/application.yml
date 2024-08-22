@@ -8,7 +8,10 @@ spring:
         web-allow-others: true
   sql:
     init:
+      mode: always
       data-locations: data.sql
+      schema-locations: schema.sql
+      continue-on-error: true
 
   jpa:
     generate-ddl: false
