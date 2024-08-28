@@ -15,9 +15,7 @@ spring:
 
   jpa:
     generate-ddl: false
-    defer-datasource-initialization: true
-    properties:
-      hibernate:
-        format_sql: false
-        ddl-auto: none
+    hibernate:
+      ddl-auto: none
+    show-sql: true
 

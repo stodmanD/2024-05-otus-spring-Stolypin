@@ -8,10 +8,7 @@ spring:
       schema-locations: schema.sql
       continue-on-error: true
   jpa:
-    generate-ddl: true
-    defer-datasource-initialization: true
-    properties:
-      hibernate:
-        format_sql: true
-        ddl-auto: none
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
     show-sql: true
