@@ -1,39 +1,58 @@
 package com.example.hw08mongo.commands;
 
-import com.example.hw08mongo.converters.CommentConverter;
-import com.example.hw08mongo.dto.CommentDto;
-import com.example.hw08mongo.exceptions.EntityNotFoundException;
+import com.example.hw08mongo.converters.CommentsConverter;
+import com.example.hw08mongo.models.Comment;
 import com.example.hw08mongo.services.CommentService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
-@RequiredArgsConstructor
+
+import java.util.List;
+import java.util.Optional;
+
+@SuppressWarnings({"SpellCheckingInspection", "unused"})
 @ShellComponent
 public class CommentCommands {
+
     private final CommentService commentService;
 
-    private final CommentConverter commentConverter;
+    private final CommentsConverter commentsConverter;
 
-    //ac 1 goodBook
-    @ShellMethod(value = "Add comment", key = "ac")
-    String addComment(String bookId, String commentText) {
-        CommentDto comment = commentService.create(bookId, commentText);
-        return commentConverter.commentToString(comment);
+    public CommentCommands(CommentService commentService, CommentsConverter commentsConverter) {
+        this.commentService = commentService;
+        this.commentsConverter = commentsConverter;
     }
 
-    //cbid 1
     @ShellMethod(value = "Find comment by id", key = "cbid")
-    String getComment(String id) {
-        return commentService.findById(id)
-                .map(commentConverter::commentToString)
-                .orElseThrow(() -> new EntityNotFoundException("Comment with id = %s not found".formatted(id)));
+    public String findCommentById(String id) {
+        Optional<Comment> comment = commentService.findById(id);
+        if (comment.isEmpty()) {
+            return "Comment with id %s not found".formatted(id);
+        }
+        return commentsConverter.commentToString(comment.get());
     }
 
-    //cupd 1 likeIt
-    @ShellMethod(value = "Update comment", key = "cupd")
-    String updateComment(String id, String commentText) {
-        CommentDto comment = commentService.update(id, commentText);
-        return commentConverter.commentToString(comment);
+    @ShellMethod(value = "Insert new comment for book", key = "inc")
+    public String insertComment(String text, String bookId) {
+        Comment savedComment = commentService.insert(text, bookId);
+        return commentsConverter.commentToString(savedComment);
+    }
+
+    @ShellMethod(value = "Update comment by ID", key = "ucid")
+    public String updateComment(String id, String text) {
+        Comment savedComment = commentService.update(id, text);
+        return commentsConverter.commentToString(savedComment);
+    }
+
+    @ShellMethod(value = "Find all comments by book id", key = "fbbid")
+    public String findCommentsByBookId(String bookId) {
+        List<Comment> comments = commentService.findAllCommentsByBookId(bookId);
+        return commentsConverter.commentsToString(comments);
+    }
+
+    @ShellMethod(value = "Delete comment by id", key = "dcbid")
+    public String deleteCommentById(String id) {
+        commentService.deleteById(id);
+        return "Comment with %s deleted".formatted(id);
     }
 }

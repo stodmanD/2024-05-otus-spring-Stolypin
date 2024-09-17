@@ -1,19 +1,19 @@
 package com.example.hw08mongo.services;
 
-import com.example.hw08mongo.dto.BookDto;
+
+import com.example.hw08mongo.models.Book;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public interface BookService {
-    Optional<BookDto> findById(String id);
+    Optional<Book> findById(String id);
 
-    List<BookDto> findAll();
+    List<Book> findAll();
 
-    BookDto create(String title, String authorId, Set<String> genreIds);
+    Book insert(String title, String authorId, String genreId);
 
-    BookDto update(String id, String title, String authorId, Set<String> genreIds);
+    Book update(String id, String title, String authorId, String genreId);
 
     void deleteById(String id);
 }

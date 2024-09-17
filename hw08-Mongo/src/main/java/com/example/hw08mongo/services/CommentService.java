@@ -1,13 +1,20 @@
 package com.example.hw08mongo.services;
 
-import com.example.hw08mongo.dto.CommentDto;
 
+import com.example.hw08mongo.models.Comment;
+
+import java.util.List;
 import java.util.Optional;
 
 public interface CommentService {
-    CommentDto create(String bookId, String commentText);
 
-    Optional<CommentDto> findById(String id);
+    List<Comment> findAllCommentsByBookId(String bookId);
 
-    CommentDto update(String id, String text);
+    Optional<Comment> findById(String id);
+
+    Comment insert(String text, String bookId);
+
+    Comment update(String id, String text);
+
+    void deleteById(String id);
 }

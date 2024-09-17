@@ -1,9 +1,9 @@
 spring:
   data:
     mongodb:
-      port: 0
-      database: library
-      host: localhost
+      port: 0 # when flapdoodle using
+      database: company
+
 
 de:
   flapdoodle:
@@ -12,10 +12,10 @@ de:
         version: 4.0.2
 
 mongock:
-  #runner-type: "ApplicationRunner"
+  #runner-type: "ApplicationRunner" # default
   runner-type: "InitializingBean"
   change-logs-scan-package:
-    - ru.otus.hw.changelogs
+    - com.example.hw08mongo.changelog
   mongo-db:
     write-concern:
       journal: false
