@@ -5,6 +5,7 @@ import com.example.hw08mongo.models.Comment;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,11 +34,11 @@ public class MongoCommentsRepositoryTest {
     private CommentRepository commentRepository;
 
     @Autowired
-    private BookRepository bookRepository;
+    private MongoTemplate mongoTemplate;
 
     @BeforeEach
     public void init() {
-        books = bookRepository.findAll().stream()
+        books = mongoTemplate.findAll(Book.class).stream()
                 .filter(b -> b.getTitle().contains("Comment_")).toList();
         firstBook = books.stream()
                 .filter(b -> b.getTitle().equals("Comment_TTL_1")).findFirst().get();

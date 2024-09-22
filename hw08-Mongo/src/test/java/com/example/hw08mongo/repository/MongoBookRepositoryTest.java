@@ -8,20 +8,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.data.mongodb.core.MongoTemplate;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DisplayName("Репозиторий на основе jpa для работы с книгами ")
 @DataMongoTest
 class MongoBookRepositoryTest {
 
     private final static String NEW_BOOK_TITLE = "Title_5";
-
-    private final static String BOOK_ID_SUFFIX = "b";
 
     private List<Author> authorList;
 
@@ -33,15 +32,12 @@ class MongoBookRepositoryTest {
     private BookRepository bookRepository;
 
     @Autowired
-    private AuthorRepository authorRepository;
-
-    @Autowired
-    private GenreRepository genreRepository;
+    private MongoTemplate mongoTemplate;
 
     @BeforeEach
     public void init() {
-        authorList = authorRepository.findAll();
-        genreList = genreRepository.findAll();
+        authorList = mongoTemplate.findAll(Author.class);
+        genreList = mongoTemplate.findAll(Genre.class);
         bookList = bookRepository.findAll()
                 .stream().filter(b -> b.getTitle().contains("Title_")).toList();
     }
@@ -71,6 +67,7 @@ class MongoBookRepositoryTest {
                 .matches(s -> s.getTitle().equals(NEW_BOOK_TITLE))
                 .matches(s -> s.getAuthor().getFullName().equals(author.getFullName()))
                 .matches(s -> s.getGenre().getName().equals(genre.getName()));
+        bookRepository.deleteById(actualBook.getId());
     }
 
     @DisplayName("должен сохранять измененную книгу")
@@ -98,37 +95,12 @@ class MongoBookRepositoryTest {
         assertThat(deletedBook).isNotPresent();
     }
 
-    private static List<Author> getDbAuthors() {
-        return IntStream.range(1, 4).boxed()
-                .map(id -> getAuthor(Integer.toString(id)))
-                .toList();
+    @Test
+    @DisplayName("должен загружать список всех книг")
+    void findAll() {
+        var actualBooks = bookRepository.findAll();
+        assertEquals(6, actualBooks.size());
+        actualBooks.forEach(System.out::println);
     }
 
-    private static List<Genre> getDbGenres() {
-        return IntStream.range(1, 4).boxed()
-                .map(id -> getGenre(Integer.toString(id)))
-                .toList();
-    }
-
-    private static List<Book> getDbBooksList(List<Author> dbAuthors, List<Genre> dbGenres) {
-        return IntStream.range(1, 4).boxed()
-                .map(id -> new Book(id + BOOK_ID_SUFFIX, "BookTitle_" + id,
-                        dbAuthors.get(id - 1),
-                        dbGenres.get(id - 1)))
-                .toList();
-    }
-    private static List<Book> getDbBooks() {
-        var dbAuthors = getDbAuthors();
-        var dbGenres = getDbGenres();
-        return getDbBooksList(dbAuthors, dbGenres);
-    }
-
-    private static Author getAuthor(String id) {
-        return new Author("Author_" + id);
-    }
-
-
-    private static Genre getGenre(String id) {
-        return new Genre("Genre_" + id);
-    }
 }
