@@ -1,4 +1,4 @@
-package com.example.hw08mongo.services;
+package com.example.hw08mongo.services.Impl;
 
 import com.example.hw08mongo.exceptions.EntityNotFoundException;
 import com.example.hw08mongo.models.Book;
@@ -6,6 +6,7 @@ import com.example.hw08mongo.repository.AuthorRepository;
 import com.example.hw08mongo.repository.BookRepository;
 import com.example.hw08mongo.repository.CommentRepository;
 import com.example.hw08mongo.repository.GenreRepository;
+import com.example.hw08mongo.services.BookService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,13 +43,11 @@ public class BookServiceImpl implements BookService {
         return bookRepository.findAll();
     }
 
-    @Transactional
     @Override
     public Book insert(String title, String authorId, String genreId) {
         return save("", title, authorId, genreId);
     }
 
-    @Transactional
     @Override
     public Book update(String id, String title, String authorId, String genreId) {
         return save(id, title, authorId, genreId);

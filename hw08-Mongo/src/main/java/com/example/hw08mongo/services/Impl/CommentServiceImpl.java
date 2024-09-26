@@ -1,10 +1,11 @@
-package com.example.hw08mongo.services;
+package com.example.hw08mongo.services.Impl;
 
 import com.example.hw08mongo.exceptions.EntityNotFoundException;
 import com.example.hw08mongo.models.Book;
 import com.example.hw08mongo.models.Comment;
 import com.example.hw08mongo.repository.BookRepository;
 import com.example.hw08mongo.repository.CommentRepository;
+import com.example.hw08mongo.services.CommentService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,7 +57,7 @@ public class CommentServiceImpl implements CommentService {
         if (commentRepository.existsById(id)) {
             commentRepository.deleteById(id);
         } else  {
-            new EntityNotFoundException("Comment with id %s not found".formatted(id));
+           throw new EntityNotFoundException("Comment with id %s not found".formatted(id));
         }
     }
 

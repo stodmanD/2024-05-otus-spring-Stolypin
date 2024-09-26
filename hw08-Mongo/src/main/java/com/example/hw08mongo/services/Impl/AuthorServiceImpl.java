@@ -1,7 +1,8 @@
-package com.example.hw08mongo.services;
+package com.example.hw08mongo.services.Impl;
 
 import com.example.hw08mongo.models.Author;
 import com.example.hw08mongo.repository.AuthorRepository;
+import com.example.hw08mongo.services.AuthorService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,8 +1,9 @@
-package com.example.hw08mongo.services;
+package com.example.hw08mongo.services.Impl;
 
 import com.example.hw08mongo.exceptions.EntityNotFoundException;
 import com.example.hw08mongo.models.Genre;
 import com.example.hw08mongo.repository.GenreRepository;
+import com.example.hw08mongo.services.GenreService;
 import org.springframework.stereotype.Service;
 
 
