@@ -23,6 +23,7 @@
         <module>hw07-Spring-Data</module>
 
         <module>hw09-MVC-View</module>
+        <module>hw10-Spring-MVC</module>
     </modules>
     <properties>
         <java.version>17</java.version>

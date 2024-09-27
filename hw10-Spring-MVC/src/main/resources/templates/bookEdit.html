@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        .comments {
+            margin-top: 10px;
+            width: 300px;
+            border: 1px solid gray;
+        }
+
+        h3 {
+            background-image: url("../static/leaf.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/leaf.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+    <script>
+        function init() {
+            loadAuthors()
+            loadGenres()
+            loadBook()
+        }
+
+        function loadGenres() {
+            fetch("/api/dic/genres", {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }})
+                .then(rawResponse => handleErrors(rawResponse))
+                .then(rawResponse => rawResponse.json())
+                .then(json => {
+                    const genresSelect = document.getElementById("genres-select")
+                    genresSelect.innerHTML = ""
+                    json.forEach(d => genresSelect.add(new Option(d.name, d.id)));
+                })
+                .catch(error => alert("Ошибка" + error))
+        }
+
+        function loadAuthors() {
+            fetch("/api/dic/authors", {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }})
+                .then(rawResponse => handleErrors(rawResponse))
+                .then(rawResponse => rawResponse.json())
+                .then(json => {
+                    const authorSelect = document.getElementById("author-select")
+                    authorSelect.innerHTML = ""
+                    json.forEach(d => authorSelect.add(new Option(d.fullName, d.id)));
+                })
+                .catch(error => alert("Ошибка" + error))
+        }
+
+        function saveBook() {
+            const id = document.getElementById("id-input")
+            const title = document.getElementById("title-input")
+            const author = document.getElementById("author-select")
+            const genres = document.getElementById("genres-select").options
+            const genresSelected = Array.from(genres).filter(o => o.selected).map(o => o.value)
+
+            const book = {id: id.value, title: title.value, authorId: author.value, genreIds: genresSelected}
+            const method = id.value.length === 0 ? 'POST' : 'PUT'
+            const url = id.value.length === 0 ? "/api/book" : "/api/book/" + id.value
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(book)})
+                .then(rawResponse => handleErrors(rawResponse))
+                .then(rawResponse => rawResponse.json())
+                .then(book => displayBook(book))
+                .then(() => alert(id.value.length === 0 ? "Book added" : "Book updated"))
+                .then(() => window.location.replace("/"))
+                .catch(error => alert("Ошибка" + error))
+        }
+
+        function loadBook() {
+            const id = document.getElementById("id-input").value
+            if (id.length === 0) {
+                return
+            }
+            fetch("/api/book/" + id, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }})
+                .then(rawResponse => handleErrors(rawResponse))
+                .then(rawResponse => rawResponse.json())
+                .then(book => displayBook(book))
+                .catch(error => alert("Ошибка" + error))
+        }
+
+        function displayBook(book) {
+            const id = document.getElementById("id-input")
+            id.value = book.id
+            const title = document.getElementById("title-input")
+            title.value = book.title
+            const author = document.getElementById("author-select")
+            author.value = book.author.id
+            const genres = document.getElementById("genres-select")
+            const genreIds = book.genres.map(genre => genre.id)
+            for (let i = 0; i < genres.options.length; i++) {
+                let optionValue = Number.parseInt(genres.options[i].value)
+                genres.options[i].selected = genreIds.indexOf(optionValue) >= 0;
+            }
+            const commentsBlock = document.getElementById("comments-block")
+
+            commentsBlock.hidden = false
+            const addCommentRef = document.getElementById("addCommentRef");
+            addCommentRef.href = "/addComment?id=" + book.id
+            loadComments(book)
+        }
+
+        function loadComments(book) {
+            const id = book.id
+            if (id.length === 0) {
+                return
+            }
+            fetch("/api/book/" + id + "/comment", {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }})
+                .then(rawResponse => handleErrors(rawResponse))
+                .then(rawResponse => rawResponse.json())
+                .then(json => {
+                    const table = document.getElementById("comments")
+                    const tableBody = table.querySelector("tbody")
+                    tableBody.innerHTML = ""
+                    for (const comment of json) {
+                        const rowElement = document.createElement("tr")
+
+                        const commentElement = document.createElement("td")
+                        commentElement.textContent = comment.text
+                        rowElement.appendChild(commentElement)
+
+                        tableBody.appendChild(rowElement)
+                    }
+                })
+                .catch(error => alert("Ошибка" + error))
+        }
+
+        function deleteBook() {
+            const id = document.getElementById("id-input").value
+            if (id.length === 0) {
+                return
+            }
+            fetch("/api/book/" + id, {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }})
+                .then(rawResponse => handleErrors(rawResponse))
+                .then(() => alert("Book deleted"))
+                .then(() => window.location.replace("/"))
+                .catch(error => alert("Ошибка" + error))
+        }
+
+        function handleErrors(response) {
+            if (!response.ok) throw new Error(response.status);
+            return response;
+        }
+    </script>
+</head>
+<body onload="init()">
+<!-- Book editing -->
+    <h3>Book Info:</h3>
+
+    <div class="row">
+        <label for="id-input">ID:</label>
+        <input id="id-input" type="text" readonly="readonly" name="id" th:value="${id}" value="1"/>
+    </div>
+
+    <div class="row">
+        <label for="title-input">Title:</label>
+        <input id="title-input" name="title" type="text" placeholder="Enter title"/>
+    </div>
+
+    <div class="row">
+        <label for="author-select">Author</label>
+        <select id="author-select">
+            <option>Select author</option>
+        </select>
+    </div>
+
+    <div class="row">
+        <label for="genres-select">Genres</label>
+        <select id="genres-select" multiple="multiple">
+            <option>Select genres</option>
+        </select>
+    </div>
+
+    <div hidden id="comments-block" class="comments">
+        <label for="comments">Comments:</label>
+        <table style="margin-left: 100px" id="comments">
+            <tbody>
+            </tbody>
+        </table>
+        <a id="addCommentRef" href="addComment.html">Add Comment</a>
+    </div>
+
+    <div class="row">
+        <button type="button" onclick="saveBook()">Save</button>
+        <a href="booksList.html" th:href="@{/}"><button type="button">Cancel</button></a>
+    </div>
+
+<!-- Book deletion -->
+    <h3>Delete Book:</h3>
+    <div class="row">
+        <button type="button" onclick="deleteBook()">Delete</button>
+    </div>
+
+</body>
+</html>
