@@ -24,6 +24,7 @@
 
         <module>hw09-MVC-View</module>
         <module>hw10-Spring-MVC</module>
+        <module>hw11-Spring_Security_authentication</module>
     </modules>
     <properties>
         <java.version>17</java.version>
