@@ -13,18 +13,18 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/dic")
-public class DicRestController {
+@RequestMapping("/api")
+public class DictionaryRestController {
     private final GenreService genreService;
 
     private final AuthorService authorService;
 
-    @GetMapping("/genres")
+    @GetMapping("/dic/genres")
     public List<GenreDto> getGenresDic() {
         return genreService.findAll();
     }
 
-    @GetMapping("/authors")
+    @GetMapping("/dic/authors")
     public List<AuthorDto> getAuthorsDic() {
         return authorService.findAll();
     }

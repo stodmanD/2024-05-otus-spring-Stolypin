@@ -156,7 +156,7 @@
             if (id.length === 0) {
                 return
             }
-            fetch("/api/book/" + id + "/comment", {
+            fetch("/api/comment/" + id, {
                 method: 'GET',
                 headers: {
                     'Accept': 'application/json',

@@ -46,7 +46,7 @@
             const commentText = document.getElementById("comment").value
             const bookId = document.getElementById("bookId").textContent;
             const comment = {text:commentText}
-            fetch("/api/book/" + bookId + "/comment", {
+            fetch("/api/comment/" + bookId, {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

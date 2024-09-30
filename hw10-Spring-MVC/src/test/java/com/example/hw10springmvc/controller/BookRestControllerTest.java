@@ -3,7 +3,6 @@ package com.example.hw10springmvc.controller;
 import com.example.hw10springmvc.controllers.api.BookRestController;
 import com.example.hw10springmvc.dto.request.BookCreateDto;
 import com.example.hw10springmvc.dto.request.BookUpdateDto;
-import com.example.hw10springmvc.dto.request.CommentCreateDto;
 import com.example.hw10springmvc.dto.response.AuthorDto;
 import com.example.hw10springmvc.dto.response.BookDto;
 import com.example.hw10springmvc.dto.response.CommentDto;
@@ -87,7 +86,8 @@ public class BookRestControllerTest {
         MvcResult mvcResult = mvc.perform(get("/api/book"))
                 .andExpect(status().isOk()).andDo(print())
                 .andReturn();
-        List<BookDto> response = MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>(){});
+        List<BookDto> response = MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
+        });
 
         verify(bookService).findAll();
         assertEquals(daoRes, response);
@@ -125,7 +125,8 @@ public class BookRestControllerTest {
         mvc.perform(post("/api/book")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(MAPPER.writeValueAsString(bookCreateDto)))
-                .andExpect(status().isInternalServerError()).andDo(print());;
+                .andExpect(status().isInternalServerError()).andDo(print());
+        ;
 
         verify(bookService).create(bookCreateDto);
     }
@@ -223,72 +224,4 @@ public class BookRestControllerTest {
         verify(bookService).deleteById(3L);
     }
 
-    @Test
-    void getCommentsForBookPositiveTest() throws Exception {
-        List<CommentDto> daoRes = List.of(this.commentDto);
-        given(commentService.findByBookId(anyLong())).willReturn(daoRes);
-
-        MvcResult mvcResult = mvc.perform(get("/api/book/3/comment"))
-                .andExpect(status().isOk()).andDo(print())
-                .andReturn();
-        List<CommentDto> response = MAPPER.readValue(mvcResult.getResponse().getContentAsString(), new TypeReference<>(){});
-
-        verify(commentService).findByBookId(3L);
-        assertEquals(daoRes, response);
-    }
-
-    @Test
-    void getCommentsForBookError500Test() throws Exception {
-        given(commentService.findByBookId(anyLong())).willThrow(RuntimeException.class);
-
-        mvc.perform(get("/api/book/3/comment"))
-                .andExpect(status().isInternalServerError()).andDo(print())
-                .andReturn();
-
-        verify(commentService).findByBookId(3L);
-    }
-
-    @Test
-    void addNewCommentForBookPositiveTest() throws Exception {
-        given(commentService.create(anyLong(), anyString())).willReturn(commentDto);
-
-        CommentCreateDto request = new CommentCreateDto("comment text");
-        MvcResult mvcResult = mvc.perform(post("/api/book/3/comment")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(MAPPER.writeValueAsString(request)))
-                .andExpect(status().isOk()).andDo(print())
-                .andReturn();
-
-        CommentDto response = MAPPER.readValue(mvcResult.getResponse().getContentAsString(), CommentDto.class);
-        verify(commentService).create(3L, request.getText());
-        assertEquals(commentDto, response);
-    }
-
-    @Test
-    void addNewCommentForBookError404Test() throws Exception {
-        given(commentService.create(anyLong(), anyString())).willThrow(NotFoundException.class);
-
-        CommentCreateDto request = new CommentCreateDto("comment text");
-        mvc.perform(post("/api/book/3/comment")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(MAPPER.writeValueAsString(request)))
-                .andExpect(status().isNotFound()).andDo(print())
-                .andReturn();
-
-        verify(commentService).create(3L, request.getText());
-    }
-
-    @Test
-    void addNewCommentForBookTest() throws Exception {
-        given(commentService.create(anyLong(), anyString())).willThrow(RuntimeException.class);
-
-        CommentCreateDto request = new CommentCreateDto("comment text");
-        mvc.perform(post("/api/book/3/comment")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(MAPPER.writeValueAsString(request)))
-                .andExpect(status().isInternalServerError()).andDo(print())
-                .andReturn();
-
-        verify(commentService).create(3L, request.getText());
-    }
 }
