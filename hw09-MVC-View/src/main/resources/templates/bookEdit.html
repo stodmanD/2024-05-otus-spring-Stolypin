@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        .comments {
+            margin-top: 10px;
+            width: 300px;
+            border: 1px solid gray;
+        }
+
+        h3 {
+            background-image: url("../static/leaf.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/leaf.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+<!-- Book editing -->
+<form th:with="bookId=${book.id eq 0} ? '' : '/'+${book.id}"
+      id="edit-form" action="bookEdit.html" th:action="@{'/book' + ${bookId}}" th:method="post" th:object="${book}">
+    <h3>Information about Book:</h3>
+
+    <div class="row">
+        <label for="id-input">ID:</label>
+        <input id="id-input" type="text" readonly="readonly" name="id" th:value="*{id}" value="1"/>
+        <div class="errors" th:if="${#fields.hasErrors('id')}" th:errors="*{id}">Wrong book id error</div>
+    </div>
+
+    <div class="row">
+        <label for="book-title-input">Title:</label>
+        <input id="book-title-input" name="title" type="text" th:value="*{title}" value="Harry Potter and Chamber of Secrets"/>
+        <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Wrong book title error</div>
+    </div>
+
+    <div class="row">
+        <label for="author">Author</label>
+        <select id="author" th:field="*{author}">
+            <option th:each="author : ${allAuthors}" th:value="${author.id}" th:text="${author.fullName}">Select author</option>
+        </select>
+        <div class="errors" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Wrong book author error</div>
+    </div>
+
+    <div class="row">
+        <label for="genres">Genres</label>
+        <select id="genres" th:field="*{genres}" multiple="multiple">
+            <option th:each="genre : ${allGenres}" th:value="${{genre.id}}" th:text="${genre.name}">Select genres</option>
+        </select>
+        <div class="errors" th:if="${#fields.hasErrors('genres')}" th:errors="*{genres}">Wrong book genres error</div>
+    </div>
+
+    <div th:hidden="*{id eq 0 or #fields.hasErrors()}" class="comments">
+        <label for="comments">Comments:</label>
+        <table style="margin-left: 100px" id="comments">
+            <tbody>
+            <tr th:each="comment : ${comments}">
+                <td style="font-size: small" th:text="${comment.text}">comment</td>
+            </tr>
+            </tbody>
+        </table>
+        <a th:href="@{/addComment(id=${book.id})}" href="addComment.html">Add Comment</a>
+    </div>
+
+    <div class="row">
+        <button type="submit">Save</button>
+        <a href="booksList.html" th:href="@{/}"><button type="button">Cancel</button></a>
+    </div>
+</form>
+
+<!-- Book deletion -->
+<form th:hidden="${book.id eq 0}" id="delete-form" action="bookEdit.html" th:action="@{/book/{id}/delete(id=${book.id})}" th:method="post" th:object="${book}">
+    <h3>Delete Book:</h3>
+    <div class="row">
+        <button type="submit">Delete</button>
+    </div>
+</form>
+
+</body>
+</html>

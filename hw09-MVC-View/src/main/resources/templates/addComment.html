@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        h3 {
+            background-image: url("../static/leaf.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/leaf.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Add comment -->
+<form id="add-comment-form" action="addComment.html" th:action="@{/addComment(id=${book.id})}" th:method="post" th:object="${comment}">
+    <h3>Add comment for book:</h3>
+
+    <div class="row">
+        Add comment for book: <span th:text="${book.title}">"Harry Potter and Chamber of Secrets"</span>
+    </div>
+    <div class="errors" th:if="${#fields.hasErrors('text')}" th:errors="*{text}">Wrong comment text error</div>
+    <textarea th:field="*{text}" id="comment" name="comment" rows="5" cols="33">Good book...</textarea>
+
+    <div class="row">
+        <button type="submit">Ok</button>
+        <a href="bookEdit.html" th:href="@{/edit(id=${book.id})}"><button type="button">Cancel</button></a>
+    </div>
+</form>
+
+</body>
+</html>
