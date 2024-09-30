@@ -36,7 +36,7 @@ public class MongoAuthorRepositoryTest {
 
     @DisplayName("Должен загружать список всех авторов")
     @Test
-    void shouldReturnCorretAuthorsList() {
+    void shouldReturnCorrectAuthorsList() {
         List<Author> authors = authorRepository.findAll();
         assertThat(authors).isNotNull().hasSize(EXPECTED_COUNT_AUTHORS)
                 .allMatch(s -> !s.getFullName().equals(""))

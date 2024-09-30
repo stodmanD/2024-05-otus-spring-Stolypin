@@ -49,7 +49,7 @@ class MongoBookRepositoryTest {
         Genre genre = mongoTemplate.findAll(Genre.class).get(1);
         Book expectedBook = new Book(NEW_BOOK_TITLE, author, genre);
         String id = bookRepository.save(expectedBook).getId();
-        Book actualBook = bookRepository.findById(id).get();
+        Book actualBook = mongoTemplate.findById(id,Book.class);
         assertThat(actualBook)
                 .matches(s -> s.getTitle().equals(NEW_BOOK_TITLE))
                 .matches(s -> s.getAuthor().getFullName().equals(author.getFullName()))
@@ -65,7 +65,7 @@ class MongoBookRepositoryTest {
         String curBookId = mongoTemplate.findAll(Book.class).get(0).getId();
         Book expectedBook = new Book(curBookId, NEW_BOOK_TITLE, author, genre);
         bookRepository.save(expectedBook);
-        Book actualBook = bookRepository.findById(curBookId).get();
+        Book actualBook = mongoTemplate.findById(curBookId, Book.class);
         assertThat(actualBook)
                 .matches(s -> s.getTitle().equals(NEW_BOOK_TITLE))
                 .matches(s -> s.getAuthor().getFullName().equals(author.getFullName()))
@@ -77,9 +77,9 @@ class MongoBookRepositoryTest {
     @Test
     void shouldDeleteBook() {
         Book book = mongoTemplate.findAll(Book.class).get(0);
-        assertThat(bookRepository.findById(book.getId())).isPresent();
         bookRepository.deleteById(book.getId());
-        assertThat(bookRepository.findById(book.getId())).isEmpty();
+        assertThat(mongoTemplate.findById(book.getId(), Book.class)).isNull();
+        
     }
 
     @Test

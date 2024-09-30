@@ -58,7 +58,6 @@ public class MongoCommentsRepositoryTest {
         Book book = mongoTemplate.findAll(Book.class).get(0);
         String NEW_COMMENT_STRING = "new_comment";
         Comment commentForInsert = new Comment(NEW_COMMENT_STRING, book);
-        commentRepository.save(commentForInsert);
         Comment newComment = commentRepository.save(commentForInsert);
         assertThat(newComment)
                 .matches(s -> s.getBook().getId().equals(book.getId())&&
@@ -82,7 +81,6 @@ public class MongoCommentsRepositoryTest {
     void shouldDeleteCommentById() {
         Comment comment= mongoTemplate.findAll(Comment.class).get(0);
         commentRepository.deleteById(comment.getId());
-        Optional<Comment> deletedComment = commentRepository.findById(comment.getId());
-        assertThat(deletedComment).isNotPresent();
+        assertThat(mongoTemplate.findById(comment.getId(), Comment.class)).isNull();
     }
 }
