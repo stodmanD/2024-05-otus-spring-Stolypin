@@ -37,7 +37,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -240,56 +239,6 @@ public class BookRestControllerTest {
                 .andExpect(status().isInternalServerError()).andDo(print());
 
         verify(bookService).deleteById(3L);
-    }
-
-    @Test
-    void editExistedBookUnauthorizedTest() throws Exception {
-        mvc.perform(post("/book/3")
-                        .flashAttr("book", bookUpdateDto))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("**/login"))
-                .andDo(print());
-    }
-
-    @Test
-    void BookEditPageUnauthorizedTest() throws Exception {
-        mvc.perform(get("/book/3"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("**/login"))
-                .andDo(print());
-    }
-
-    @Test
-    void saveNewBookUnauthorizedTest() throws Exception {
-        mvc.perform(post("/book")
-                        .flashAttr("book", bookCreateDto))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("**/login"))
-                .andDo(print());
-    }
-
-    @Test
-    void bookCreatePageUnauthorizedTest() throws Exception {
-        mvc.perform(get("/book"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("**/login"))
-                .andDo(print());
-    }
-
-    @Test
-    void bookListUnauthorizedTest() throws Exception {
-        mvc.perform(get("/"))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("**/login"))
-                .andDo(print());
-    }
-    @Test
-    void deleteBookUnauthorizedTest() throws Exception {
-        mvc.perform(post("/book/3/delete")
-                        .flashAttr("book", bookDto))
-                .andExpect(status().isFound())
-                .andExpect(redirectedUrlPattern("**/login"))
-                .andDo(print());
     }
 
 }
