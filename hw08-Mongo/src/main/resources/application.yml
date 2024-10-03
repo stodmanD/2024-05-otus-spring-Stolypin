@@ -1,0 +1,21 @@
+spring:
+  data:
+    mongodb:
+      #port: 0 # when flapdoodle using
+      #database: company
+      authentication-database: admin
+      username: myUserAdmin
+      password: Qq123456
+      database: user_db
+      port: 27017
+      host: localhost
+
+mongock:
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - com.example.hw08mongo.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local

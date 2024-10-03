@@ -21,7 +21,7 @@
         <module>hw05-jdbs</module>
         <module>hw06-jpa</module>
         <module>hw07-Spring-Data</module>
-
+        <module>hw08-Mongo</module>
         <module>hw09-MVC-View</module>
         <module>hw10-Spring-MVC</module>
     </modules>
