@@ -9,7 +9,6 @@ import com.example.hw11spring_security_authentication.services.BookService;
 import com.example.hw11spring_security_authentication.services.CommentService;
 import com.example.hw11spring_security_authentication.services.GenreService;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -56,7 +55,7 @@ public class AuthenticationTest {
     @DisplayName("Should return expected status")
     @ParameterizedTest(name = "{0} {1} for user {2} with password {3} should return {4} status")
     @MethodSource("getTestData")
-    void ShouldReturnExpectedStatus(String method, String url, String userName, String password, int status, boolean checkLoginRedirection, String body) throws Exception {
+    void shouldReturnExpectedStatus(String method, String url, String userName, String password, int status, boolean checkLoginRedirection, String body) throws Exception {
         var request = method2RequestBuilder(method, url,body);
         if (Objects.nonNull(userName)) {
             request = request.with(user(userName).password(password));
