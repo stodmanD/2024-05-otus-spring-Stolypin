@@ -1,0 +1,11 @@
+package com.example.hw11spring_security_authentication.repositories;
+
+import com.example.hw11spring_security_authentication.models.auth.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+
+import java.util.Optional;
+
+public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findUserByUsername(String userName);
+}
