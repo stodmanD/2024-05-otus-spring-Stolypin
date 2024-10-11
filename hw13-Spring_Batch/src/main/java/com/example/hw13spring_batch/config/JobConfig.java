@@ -1,5 +1,7 @@
 package com.example.hw13spring_batch.config;
 
+import com.example.hw13spring_batch.cache.AuthorCache;
+import com.example.hw13spring_batch.cache.GenreCache;
 import com.example.hw13spring_batch.models.jpa.AuthorJpa;
 import com.example.hw13spring_batch.models.jpa.BookJpa;
 import com.example.hw13spring_batch.models.jpa.GenreJpa;
@@ -33,7 +35,6 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import java.util.HashMap;
-import java.util.Map;
 
 @SuppressWarnings("unused")
 @RequiredArgsConstructor
@@ -49,9 +50,9 @@ public class JobConfig {
 
     private final PlatformTransactionManager platformTransactionManager;
 
-    private final Map<String, Long> authorsDic = new HashMap<>();
+    private final AuthorCache authorsDic;
 
-    private final Map<String, Long> genresDic = new HashMap<>();
+    private final GenreCache genresDic;
 
     @Bean
     public MongoPagingItemReader<Author> authorReader(MongoTemplate template) {
@@ -98,6 +99,7 @@ public class JobConfig {
 
     @Bean
     public BookMongoToSqlTransformer bookMongoToSqlTransformer() {
+//        return new BookMongoToSqlTransformer(authorsDic, bookDic,genresDic);
         return new BookMongoToSqlTransformer(authorsDic, genresDic);
     }
 

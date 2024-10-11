@@ -1,26 +1,24 @@
 package com.example.hw13spring_batch.service;
 
+import com.example.hw13spring_batch.cache.AuthorCache;
 import com.example.hw13spring_batch.models.jpa.AuthorJpa;
 import com.example.hw13spring_batch.models.mongo.Author;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
 @RequiredArgsConstructor
 @Service
 public class AuthorMongoToSqlTransformer {
-    private final Map<String, Long> authorsDic;
 
-    private long authorId = 1;
+    private final AuthorCache authorsDic;
 
     public AuthorJpa transform(Author author) {
-        authorsDic.put(author.getId(), authorId);
-        return new AuthorJpa(authorId++, author.getFullName());
+        AuthorJpa authorJpa = new AuthorJpa(Long.parseLong(author.getId()) + 1, author.getFullName());
+        authorsDic.put(author.getId(), authorJpa.getId());
+        return authorJpa;
     }
 
     public void cleanUp() {
-        authorId = 1;
         authorsDic.clear();
     }
 }

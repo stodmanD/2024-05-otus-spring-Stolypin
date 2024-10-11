@@ -1,43 +1,39 @@
 package com.example.hw13spring_batch.service;
 
+import com.example.hw13spring_batch.cache.AuthorCache;
+import com.example.hw13spring_batch.cache.GenreCache;
 import com.example.hw13spring_batch.models.jpa.AuthorJpa;
 import com.example.hw13spring_batch.models.jpa.BookJpa;
 import com.example.hw13spring_batch.models.jpa.GenreJpa;
 import com.example.hw13spring_batch.models.mongo.Book;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-
-import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BookMongoToSqlTransformer {
-    private int id = 1;
 
-    private final Map<String, Long> authorsDic;
+    private final AuthorCache authorsDic;
 
-    private final Map<String, Long> genresDic;
+    private final GenreCache genresDic;
 
     public BookJpa transform(Book book) {
-        BookJpa result = new BookJpa();
-        result.setId(id++);
-        result.setTitle(book.getTitle());
-        AuthorJpa author = new AuthorJpa(authorsDic.get(book.getAuthor().getId()), book.getAuthor().getFullName());
-        result.setAuthor(author);
 
-        List<GenreJpa> genres = book.getGenres().stream()
-                .map(genre -> new GenreJpa(genresDic.get(genre.getId()), genre.getName()))
-                .collect(Collectors.toList());
-
-        result.setGenres(genres);
-        return result;
+        BookJpa bookJpa = new BookJpa(Long.parseLong(book.getId()) + 1, book.getTitle()
+                , new AuthorJpa(authorsDic.getEntityByKey(book.getAuthor().getId())
+                , book.getAuthor().getFullName()), book.getGenres().stream()
+                .map(genre -> new GenreJpa(genresDic.getEntityByKey(genre.getId()), genre.getName()))
+                .collect(Collectors.toList()));
+        log.info("Book name='{}', mongo id = '{}',long id = {}",
+                book.getTitle(), book.getId(), bookJpa.getId());
+        return bookJpa;
     }
 
     public void cleanUp() {
-        id = 1;
         authorsDic.clear();
         genresDic.clear();
     }

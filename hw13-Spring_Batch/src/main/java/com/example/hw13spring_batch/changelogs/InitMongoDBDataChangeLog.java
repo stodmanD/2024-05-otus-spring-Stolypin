@@ -28,7 +28,7 @@ public class InitMongoDBDataChangeLog {
     @ChangeSet(order = "001", id = "initAuthors", author = "stodman", runAlways = true)
     public void initAuthors(MongockTemplate template) {
         for (int i = 0; i < 20; i++) {
-            Author author = new Author(null, "author" + i);
+            Author author = new Author(String.valueOf(i), "author" + i);
             template.save(author);
             authors.add(author);
         }
@@ -37,7 +37,7 @@ public class InitMongoDBDataChangeLog {
     @ChangeSet(order = "002", id = "initGenres", author = "stodman", runAlways = true)
     public void initGenres(MongockTemplate template) {
         for (int i = 0; i < 15; i++) {
-            Genre genre = new Genre(null, "genre" + i);
+            Genre genre = new Genre(String.valueOf(i), "genre" + i);
             template.save(genre);
             genres.add(genre);
         }
@@ -46,7 +46,7 @@ public class InitMongoDBDataChangeLog {
     @ChangeSet(order = "003", id = "initBooks", author = "stodman", runAlways = true)
     public void initBooks(MongockTemplate template) {
         for (int i = 0; i < 3; i++) {
-            Book book = new Book(null, "book" + i, authors.get(i), genres.subList(i, i + 2));
+            Book book = new Book(String.valueOf(i), "book" + i, authors.get(i), genres.subList(i, i + 2));
             template.save(book);
             books.add(book);
         }
