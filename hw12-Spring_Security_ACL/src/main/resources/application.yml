@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:maindb
+  h2:
+    console.enabled: true
+    console:
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
