@@ -13,8 +13,8 @@ public class AuthorMongoToSqlTransformer {
     private final AuthorCache authorsDic;
 
     public AuthorJpa transform(Author author) {
-        AuthorJpa authorJpa = new AuthorJpa(Long.parseLong(author.getId()) + 1, author.getFullName());
-        authorsDic.put(author.getId(), authorJpa.getId());
+        AuthorJpa authorJpa = new AuthorJpa(author.getFullName());
+        authorsDic.put(author.getId(), authorJpa);
         return authorJpa;
     }
 

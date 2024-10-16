@@ -24,4 +24,8 @@ public class GenreJpa {
 
     @Column(name = "name")
     private String name;
+
+    public GenreJpa(String name) {
+        this.name = name;
+    }
 }

@@ -17,9 +17,9 @@ public class GenreMongoToSqlTransformer {
 
     public GenreJpa transform(Genre genre) {
 
-        GenreJpa genreJpa = new GenreJpa(Long.parseLong(genre.getId()) + 1, genre.getName());
-        genresDic.put(genre.getId(), genreJpa.getId());
-        log.info("Genre name='{}', mongo id = '{}',long id = {}",
+        GenreJpa genreJpa = new GenreJpa(genre.getName());
+        genresDic.put(genre.getId(), genreJpa);
+        log.info("Genre name='{}', mongo id = '{}'",
                 genre.getName(), genre.getId(), genreJpa.getId());
         return genreJpa;
     }

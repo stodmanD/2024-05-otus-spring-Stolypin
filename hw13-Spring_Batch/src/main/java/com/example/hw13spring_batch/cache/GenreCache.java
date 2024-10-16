@@ -1,24 +1,24 @@
 package com.example.hw13spring_batch.cache;
 
+import com.example.hw13spring_batch.models.jpa.GenreJpa;
 import org.springframework.stereotype.Component;
 
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class GenreCache {
-    private Map<String, Long> cache = new HashMap<>();
 
+    private ConcurrentHashMap<String, GenreJpa> cache = new ConcurrentHashMap<>();
 
-    public Long getEntityByKey(String key) {
+    public GenreJpa getEntityByKey(String key) {
         if (!cache.containsKey(key)) {
             throw new IllegalArgumentException("Not found Genre with id = %d".formatted(key));
         }
         return cache.get(key);
     }
 
-    public void put(String key, Long entity) {
+    public void put(String key, GenreJpa entity) {
         cache.put(key, entity);
     }
 

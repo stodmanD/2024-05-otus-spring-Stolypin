@@ -24,4 +24,8 @@ public class AuthorJpa {
 
     @Column(name = "full_name", nullable = false)
     private String fullName;
+
+    public AuthorJpa(String fullName) {
+        this.fullName = fullName;
+    }
 }

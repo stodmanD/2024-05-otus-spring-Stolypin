@@ -99,7 +99,6 @@ public class JobConfig {
 
     @Bean
     public BookMongoToSqlTransformer bookMongoToSqlTransformer() {
-//        return new BookMongoToSqlTransformer(authorsDic, bookDic,genresDic);
         return new BookMongoToSqlTransformer(authorsDic, genresDic);
     }
 

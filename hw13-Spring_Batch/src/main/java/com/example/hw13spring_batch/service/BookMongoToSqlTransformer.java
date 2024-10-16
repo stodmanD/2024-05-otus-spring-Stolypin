@@ -2,9 +2,7 @@ package com.example.hw13spring_batch.service;
 
 import com.example.hw13spring_batch.cache.AuthorCache;
 import com.example.hw13spring_batch.cache.GenreCache;
-import com.example.hw13spring_batch.models.jpa.AuthorJpa;
 import com.example.hw13spring_batch.models.jpa.BookJpa;
-import com.example.hw13spring_batch.models.jpa.GenreJpa;
 import com.example.hw13spring_batch.models.mongo.Book;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +21,12 @@ public class BookMongoToSqlTransformer {
 
     public BookJpa transform(Book book) {
 
-        BookJpa bookJpa = new BookJpa(Long.parseLong(book.getId()) + 1, book.getTitle()
-                , new AuthorJpa(authorsDic.getEntityByKey(book.getAuthor().getId())
-                , book.getAuthor().getFullName()), book.getGenres().stream()
-                .map(genre -> new GenreJpa(genresDic.getEntityByKey(genre.getId()), genre.getName()))
+        BookJpa bookJpa = new BookJpa(book.getTitle()
+                , authorsDic.getEntityByKey(book.getAuthor().getId()), book.getGenres().stream()
+                .map(genre -> genresDic.getEntityByKey(genre.getId()))
                 .collect(Collectors.toList()));
-        log.info("Book name='{}', mongo id = '{}',long id = {}",
-                book.getTitle(), book.getId(), bookJpa.getId());
+        log.info("Book name='{}', mongo id = '{}',author id = {}",
+                book.getTitle(), book.getId(), book.getAuthor().getId());
         return bookJpa;
     }
 

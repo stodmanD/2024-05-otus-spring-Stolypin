@@ -50,4 +50,11 @@ public class BookJpa {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<GenreJpa> genres;
+
+    public BookJpa(String title, AuthorJpa author, List<GenreJpa> genres) {
+        this.title = title;
+        this.author = author;
+        this.genres = genres;
+    }
+
 }
