@@ -27,7 +27,11 @@
         <module>hw10-Spring-MVC</module>
         <module>hw11-Spring_Security_authentication</module>
         <module>hw12-Spring_Security_ACL</module>
+        <module>hw13-Spring_Batch</module>
         <module>hw14-Spring_Integration</module>
+        <module>hw15-Spring_Boot_Actuator</module>
+        <module>hw16-Docker</module>
+
     </modules>
     <properties>
         <java.version>17</java.version>

@@ -1,0 +1,41 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:15432/db
+    username: postgres
+    password: postgres
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: false
+    show-sql: true
+  data:
+    rest:
+      base-path: /datarest
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health, metrics, logfile"
+  endpoint:
+    health:
+      show-details: always
+    logfile:
+      enabled:
+        true
+  health:
+    defaults:
+      enabled: true
+
+logging:
+  file:
+    name: "app.log"
