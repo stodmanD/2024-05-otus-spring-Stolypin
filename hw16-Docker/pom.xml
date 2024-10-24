@@ -11,8 +11,8 @@
     <groupId>com.example</groupId>
     <artifactId>hw16-Docker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-<!--    <name>hw16-Docker</name>-->
-<!--    <description>hw16-Docker</description>-->
+    <name>hw16-Docker</name>
+    <description>hw16-Docker</description>
 <!--    <url/>-->
 <!--    <licenses>-->
 <!--        <license/>-->
