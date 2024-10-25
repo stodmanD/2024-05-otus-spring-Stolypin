@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:15432/db
+    url: jdbc:postgresql://localhost:5432/db
     username: postgres
     password: postgres
   sql:
@@ -13,7 +13,13 @@ spring:
     generate-ddl: false
     hibernate:
       ddl-auto: none
+#    defer-datasource-initialization: true
+    properties:
+      hibernate:
+#        format_sql: false
+        dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
+
   data:
     rest:
       base-path: /datarest
