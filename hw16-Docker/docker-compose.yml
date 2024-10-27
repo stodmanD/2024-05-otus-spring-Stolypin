@@ -6,18 +6,15 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
-    depends_on:
-      - postgres
-#     Эти свойства перегружают соответствующие в application.yml
+
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:15432/db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
-      - JPA_PROPERTIES_HIBERNATE_DIALECT = org.hibernate.dialect.PostgreSQLDialect
   postgres:
     image: "postgres:13"
     ports:
-      - "15432:5432"
+      - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
