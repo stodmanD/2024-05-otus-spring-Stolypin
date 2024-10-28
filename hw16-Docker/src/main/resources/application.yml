@@ -10,7 +10,7 @@ spring:
       schema-locations: classpath:schema.sql
 
   jpa:
-    generate-ddl: false
+    generate-ddl: true
     hibernate:
       ddl-auto: none
 #    defer-datasource-initialization: true
