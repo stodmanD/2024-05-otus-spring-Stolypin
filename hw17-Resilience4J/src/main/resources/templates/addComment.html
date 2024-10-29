@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+
+        h3 {
+            background-image: url("../static/leaf.png");
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+
+    <style type="text/css" th:inline="text">
+        [[h3]] {
+            background-image: url([[@{/leaf.png}]]);
+            background-repeat: no-repeat;
+            padding: 2px;
+            padding-left: 30px;
+        }
+    </style>
+    <script>
+        function saveComment() {
+            const commentText = document.getElementById("comment").value
+            const bookId = document.getElementById("bookId").textContent;
+            const comment = {text:commentText}
+            fetch("/api/comment/" + bookId, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(comment)})
+                .then(rawResponse => handleErrors(rawResponse))
+                .then(() => alert("Comment added"))
+                .then(() => window.location.replace("/book/" + bookId))
+                .catch(error => alert("Ошибка" + error))
+        }
+
+        function handleErrors(response) {
+            if (!response.ok) throw new Error(response.status);
+            return response;
+        }
+    </script>
+</head>
+<body>
+
+<div hidden id="bookId" th:text="${id}"></div>
+<!-- Add comment -->
+<h3>Add comment for book:</h3>
+
+<div class="row">
+    Add comment for book with id = <span th:text="${id}">"Harry Potter and Chamber of Secrets"</span>
+</div>
+<textarea id="comment" name="comment" rows="5" cols="33" placeholder="Enter comment"></textarea>
+
+<div class="row">
+    <button type="button" onclick="saveComment()">Ok</button>
+    <a href="bookEdit.html" th:href="@{/book/{id}(id=${id})}">
+        <button type="button">Cancel</button>
+    </a>
+</div>
+
+</body>
+</html>
