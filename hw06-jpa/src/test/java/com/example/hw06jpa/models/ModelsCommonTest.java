@@ -41,7 +41,7 @@ class ModelsCommonTest {
         </dependency>
          */
         var reflections = new Reflections("com.example.hw06jpa.models");
-//        var reflections = new Reflections("ru.otus.hw.models");
+
         entitiesClasses = reflections.getTypesAnnotatedWith(Entity.class);
 
     }
