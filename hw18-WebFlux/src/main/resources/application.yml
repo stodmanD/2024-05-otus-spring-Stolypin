@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:27017/db
+
+#de:
+#  flapdoodle:
+#    mongodb:
+#      embedded:
+#        version: 4.0.2
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - com.example.hw18webflux.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
