@@ -33,6 +33,7 @@
         <module>hw15-Spring_Boot_Actuator</module>
         <module>hw16-Docker</module>
         <module>hw17-Resilience4J</module>
+        <module>hw18-WebFlux</module>
     </modules>
 
     <properties>
