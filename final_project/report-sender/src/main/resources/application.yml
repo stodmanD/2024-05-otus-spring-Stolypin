@@ -1,0 +1,39 @@
+server:
+  port: 8084
+  servlet:
+    context-path: /report-sender
+
+spring:
+
+  application:
+    name: report-sender
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  mail:
+    host: smtp.yandex.ru
+    username: stolypinDA@yandex.ru
+    password: Idspispopd-12
+    port: 587
+    protocol: smtp
+    properties:
+      "mail.transport.protocol": smtp
+      "mail.smtp.auth": true
+      "mail.smtp.starttls.enable": true
+
+
+
+service:
+  mq:
+    queues:
+      birthdays: "report-sender-birthdays"
+      expiring-accounts: "report-sender-expiring-accounts"
+      disabled-accounts: "report-sender-disabled-accounts"
+
+  mail:
+    from: test@yandex.ru
+    to: test1@yandex.ru

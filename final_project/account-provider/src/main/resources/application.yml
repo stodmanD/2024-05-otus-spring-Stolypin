@@ -1,0 +1,38 @@
+server:
+  port: 8082
+  servlet:
+    context-path: /account-provider
+
+spring:
+  application:
+    name: account-provider
+
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: library
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+mongock:
+  runner-type: InitializingBean
+  change-logs-scan-package: com.example.accountprovider.changelog
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+service:
+
+  report-sender:
+    queues:
+      expiring-accounts: "report-sender-expiring-accounts"
+      disabled-accounts: "report-sender-disabled-accounts"
