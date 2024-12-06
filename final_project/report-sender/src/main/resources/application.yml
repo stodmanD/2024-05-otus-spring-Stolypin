@@ -35,5 +35,5 @@ service:
       disabled-accounts: "report-sender-disabled-accounts"
 
   mail:
-    from: test@yandex.ru
-    to: test1@yandex.ru
+    from: stolypinDA@yandex.ru
+    to: stolypinDA@yandex.ru
