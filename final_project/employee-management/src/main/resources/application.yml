@@ -1,0 +1,56 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /employee-management
+
+
+
+spring:
+
+  application:
+    name: employee-management
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/employees
+    username: postgres
+    password: postgres
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+    open-in-view: false
+    defer-datasource-initialization: true
+
+
+
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+
+
+service:
+
+  account-provider:
+    base-url: http://localhost:8082/account-provider/account
+    timeout-ms: 1500
+
+  report-sender:
+    queues:
+      birthdays: "report-sender-birthdays"

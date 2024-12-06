@@ -34,6 +34,7 @@
         <module>hw16-Docker</module>
         <module>hw17-Resilience4J</module>
         <module>hw18-WebFlux</module>
+        <module>final_project</module>
     </modules>
 
     <properties>

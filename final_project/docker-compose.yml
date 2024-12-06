@@ -1,0 +1,89 @@
+version: '3'
+
+
+services:
+
+  employee-management:
+    build:
+      context: ./employee-management
+      dockerfile: Dockerfile
+    ports:
+      - "8081:8081"
+    environment:
+      spring.datasource.url: jdbc:postgresql://postgres:5432/employees
+      spring.datasource.username: postgres
+      spring.datasource.password: postgres
+      spring.jpa.properties.hibernate.format_sql: false
+      spring.rabbitmq.host: rabbitmq
+      spring.rabbitmq.port: 5672
+      spring.rabbitmq.username: guest
+      spring.rabbitmq.password: guest
+      service.account-provider.base-url: http://account-provider:8082/account-provider/account
+    depends_on:
+      - postgres
+      - rabbitmq
+      - account-provider
+
+  account-provider:
+    build:
+      context: ./account-provider
+      dockerfile: Dockerfile
+    ports:
+      - "8082:8082"
+    environment:
+      spring.data.mongodb.host: mongodb
+      spring.data.mongodb.port: 27017
+      spring.data.mongodb.database: library
+      spring.rabbitmq.host: rabbitmq
+      spring.rabbitmq.port: 5672
+      spring.rabbitmq.username: guest
+      spring.rabbitmq.password: guest
+      service.account-provider.base-url: http://account-provider:8082/account-provider/account
+    depends_on:
+      - mongodb
+      - rabbitmq
+
+  report-sender:
+    build:
+      context: ./report-sender
+      dockerfile: Dockerfile
+    ports:
+      - "8084:8084"
+    environment:
+#      spring.profiles.active: mail
+      spring.rabbitmq.host: rabbitmq
+      spring.rabbitmq.port: 5672
+      spring.rabbitmq.username: guest
+      spring.rabbitmq.password: guest
+    depends_on:
+      - rabbitmq
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: employees
+    ports:
+      - '5432:5432'
+
+  mongodb:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: account
+    ports:
+      - '27017:27017'
+
+  rabbitmq:
+    image: rabbitmq:latest
+    restart: always
+    volumes:
+      - ./deploy/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins:ro,Z
+    environment:
+      - RABBITMQ_DEFAULT_PASS=guest
+      - RABBITMQ_DEFAULT_USER=guest
+    ports:
+      - '15672:15672'
+      - '5672:5672'
